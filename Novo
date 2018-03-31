@@ -1,0 +1,96 @@
+
+import java.util.Random;
+import java.util.concurrent.Semaphore;
+
+class Hospede extends Thread {
+	
+	Random random = new Random();
+	Semaphore mutex1 ;
+	private int nCanais;//número de canais da televisão;
+	private int canal;//canal gerado para o hospede;
+	private int tAssistir;//tempo que o hospede fica assitindo tv;
+	private int intervaloInferiorAssistir;//Limite inferior;
+	private int intervaloSuperiorAssistir;//Limite superior;
+	private int tDescanso;//tempo de descanso do miserável;
+	private int intervaloInferiorDescanso;//Limite inferior do tempo de descanso;
+	private int intervaloSuperiorDescanso;//Limite superior do tempo de descanso;
+	
+
+	public Hospede(int canal,int nCanais,int tAssistir,int intervaloInferiorAssistir,int intervaloSuperiorAssistir,int tDescanso,int intervaloInferiorDescanso,int intervaloSuperiorDescanso){
+		this.canal = canal;
+		this.nCanais = nCanais;
+		this.tAssistir = tAssistir;
+		this.intervaloInferiorAssistir = intervaloInferiorAssistir;
+		this.intervaloSuperiorAssistir = intervaloSuperiorAssistir;
+		this.tDescanso = tDescanso;
+		this.intervaloInferiorDescanso = intervaloInferiorDescanso;
+		this.intervaloSuperiorDescanso = intervaloSuperiorDescanso;
+		
+		
+		this.canal = random.nextInt(this.nCanais)+1;//Atribuindo o valor ao canal;
+		this.tAssistir =  random.nextInt(this.intervaloSuperiorAssistir)+ this.intervaloInferiorAssistir;
+		this.tDescanso = random.nextInt(this.intervaloSuperiorDescanso)+ this.intervaloInferiorDescanso;
+	
+
+	}
+
+	public int getCanal() {
+		return this.canal;
+	}
+
+	public void setCanal(int canal) {
+		this.canal = canal;
+	}
+
+	public int NCanais() {
+		return this.nCanais;
+	}
+
+	public void setNCanais(int nCanais) {
+		this.nCanais = nCanais;
+	}
+
+	public int getTAssistir() {
+		return this.tAssistir;
+	}
+
+	public void setTAssistir(int tAssistir) {
+		this.tAssistir = tAssistir;
+	}
+
+	public int getIntervaloInferiorAssistir() {
+		return this.intervaloInferiorAssistir;
+	}
+
+	public void setIntervaloInferiorAssirtir(int intervaloInferiorAssistir) {
+		this.intervaloInferiorAssistir = intervaloInferiorAssistir;
+	}
+
+	public int getIntervaloSuperiorAssistir() {
+		return this.intervaloSuperiorAssistir;
+	}
+
+	public void setIntervaloSuperiorAssistir(int intervaloSuperiorAssistir) {
+		this.intervaloSuperiorAssistir = intervaloSuperiorAssistir;
+	}
+
+	public int getIntervaloInferiorDescanso() {
+		return this.intervaloInferiorDescanso;
+	}
+	public void setIntervaloInferiorDescanso(int intervaloInferiorDescanso) {
+		this.intervaloInferiorDescanso = intervaloInferiorDescanso;
+	}
+	
+	public int getIntervaloSuperiorDescanso() {
+		return this.intervaloSuperiorDescanso;
+	}
+	
+	public void setIntervaloSuperiorDescanso(int intervaloSuperiorDescanso) {
+		this.intervaloSuperiorDescanso = intervaloSuperiorDescanso;
+	}
+
+
+	public void  run() {
+		System.out.println("thread criada");
+	}
+}
