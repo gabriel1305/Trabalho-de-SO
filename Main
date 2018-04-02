@@ -1,0 +1,52 @@
+import java.util.Scanner;
+import java.util.concurrent.Semaphore;
+public class Main {
+
+	public static void main(String[] args) {
+	
+			Scanner sc = new Scanner(System.in);
+			int cont;//contador;
+			int n;//Número de hospedes;
+			int c;//Número de canais
+			int restmin=10; //intervalo inferior para tempo de descanso;
+			int restmax=20; //intervalo superior para tempo de descanso;
+			int watchmin;//intervalo inferior para tempo assistir;
+			int watchmax;//intervalo superior para tempo de assistir;
+			int chosped = 0;//variável que receberá o canal do hospede;
+			int rest_h = 0;
+			int watch_h = 0;
+			int audiencia = 0;//Semaforo1
+			int mutex1 = 1;//semaforo2
+			int mutex2 = 2;//semaforo3
+			
+			Semaphore semaforo1 = new Semaphore(audiencia);
+			Semaphore semaforo2 = new Semaphore(mutex1);
+			Semaphore semaforo3 = new Semaphore(mutex2);
+			
+			System.out.println("Digite a quantidade de hospedes:");
+			n = sc.nextInt();//lendo o numero de hospedes
+			
+			System.out.println("Digite a quantidade de canais da Tv");
+			c = sc.nextInt();//lendo o numero de canais
+			
+			System.out.println("Digite o tempo minimo de descanso");
+			restmin = sc.nextInt();//minimo do intervalo de descanso
+			
+			System.out.println("Digite o tempo maximo de descanso");
+			restmax = sc.nextInt();//maximo do intervalo de descanso
+			
+			System.out.println("Digite o tempo minimo de ver tv");
+			watchmin = sc.nextInt();//minimo do intervalo de ver tv
+			
+			System.out.println("Digite o tempo maximo de ver tv");
+			watchmax = sc.nextInt();//maximo do intervalo de ver tv
+			
+			for( cont=1;cont<=n;cont++) {
+				Thread thread = new Hospede(cont,c,chosped,rest_h,restmin,restmax,watch_h,watchmin,watchmax,semaforo1,semaforo2,semaforo3);
+				thread.start();
+			}
+
+
+	}
+
+}
