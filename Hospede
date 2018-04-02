@@ -1,0 +1,116 @@
+import java.util.Random;
+import java.util.concurrent.Semaphore;
+//System.out.println("Thread #" +this.idThread + ","+ this.rest_h+","+this.watch_h+","+this.chosped);
+
+public class Hospede extends Thread{
+	Random random = new Random();
+
+	private int livre = 0;
+	private int tv = 0;
+	private  int idThread;
+	private int c;
+	private int chosped;//variavel que receve o canal do hospede;
+	private int rest_h;//tempo de descanso;
+	private int restmin;
+	private int restmax;
+	private int watch_h;//tempo de assistir;
+	private int watchmin;
+	private int watchmax;
+	private Semaphore semaforo1;
+	private Semaphore semaforo2;
+	private Semaphore semaforo3;
+
+	public Hospede(int idThread,int c,int chosped,int rest_h,int restmin,int restmax,int watch_h,int watchmin,int watchmax,Semaphore semaforo1,Semaphore semaforo2,Semaphore semaforo3){
+		this.idThread = idThread;
+		this.c = c;
+		this.chosped = chosped;
+		this.rest_h = rest_h;
+		this.restmin = restmin;
+		this.restmax = restmax;
+		this.watch_h = watch_h;
+		this.watchmin = watchmin;
+		this.watchmax = watchmax;
+		this.semaforo1 = semaforo1;
+		this.semaforo2 = semaforo2;
+		this.semaforo3 = semaforo3; 
+
+		this.chosped = random.nextInt(c)+1;//Gerando o canal para o hospede
+		this.rest_h = (int) (Math.random()*this.restmax)+this.restmin;//gerando o tempo de descanso
+		this.watch_h = (int) (Math.random()*this.watchmax)+this.watchmin;//gerando o tempo de assistir
+	}
+
+
+	public void Assistir() {
+		int inicio = (int)System.currentTimeMillis();
+		int f;
+		f = inicio+this.watch_h*1000;
+		while (f<inicio) {
+			System.out.println("O hospede # "+idThread+" está assistindo");
+		}
+		System.out.println("O hospede # "+idThread+" terminou de assistir");
+	}
+
+	public void Descansar() {
+		int inicio = (int)System.currentTimeMillis();
+		int f;
+		f = inicio+this.rest_h*1000;
+		while (f<inicio) {
+			System.out.println("O hospede # "+idThread+" está descansando");
+		}
+		System.out.println("O hospede # "+idThread+" está pronto para assistir novamente");
+	}
+
+	public void run() {
+		//audiencia = semaforo1
+		//mutex1 = semaforo2
+		//mutex2 = semaforo3
+
+		while(true) {
+			try {
+				semaforo2.acquire();
+				if(this.livre == 0) {
+					this.livre++;
+					semaforo3.acquire();
+					semaforo2.release();
+					tv = this.chosped;
+					semaforo1.release();
+					Assistir();
+					semaforo1.acquire();
+					if(semaforo1  != null) {
+						tv=0;
+						livre--;
+						semaforo3.release();
+					}
+					Descansar();
+
+				}
+				else {
+					semaforo2.release();
+					if(tv == this.chosped) {
+						semaforo1.release();
+						Assistir();
+						semaforo1.acquire();
+						if(semaforo1  != null) {
+							tv=0;
+							livre--;
+							semaforo3.release();
+						}
+						Descansar();
+
+					}
+					else {
+						semaforo3.acquire();
+						semaforo3.release();
+					}
+				}
+			}
+
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+}
