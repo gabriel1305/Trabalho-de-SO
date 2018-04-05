@@ -1,0 +1,140 @@
+import java.util.Random;
+import java.util.concurrent.Semaphore;
+//System.out.println("Thread #" +this.idThread + ","+ this.rest_h+","+this.watch_h+","+this.chosped);
+
+public class Hospede extends Thread{
+	Random random = new Random();
+
+	public static int livre;
+	public static int tv;
+        public static int audiencia;
+	int idThread;
+	int c;
+	int chosped;//variavel que receve o canal do hospede;
+	int rest_h;//tempo de descanso;
+	int restmin;
+	int restmax;
+	int watch_h;//tempo de assistir;
+	int watchmin;
+	int watchmax;
+	Semaphore mutex1;
+	Semaphore mutex2;
+	Semaphore mutex3;
+
+	public Hospede(int idThread, int c ,int livre, int tv, int audiencia, int restmin, int restmax, int watchmin, int watchmax, Semaphore mutex1,Semaphore mutex2,Semaphore mutex3){
+		this.idThread = idThread;
+		this.c = c;
+		this.livre = livre;
+                this.audiencia = audiencia;
+                //this.chospede = hospede;
+		//this.rest_h = rest_h;
+		this.restmin = restmin;
+		this.restmax = restmax;
+		//this.watch_h = watch_h;
+		this.watchmin = watchmin;
+		this.watchmax = watchmax;
+		this.mutex1 = mutex1;
+		this.mutex2 = mutex2;
+		this.mutex3 = mutex3; 
+
+		chosped = random.nextInt(c)+1;//Gerando o canal para o hospede
+		rest_h = (int) (Math.random()*this.restmax)+this.restmin;//gerando o tempo de descanso
+		watch_h = (int) (Math.random()*this.watchmax)+this.watchmin;//gerando o tempo de assistir
+                
+                
+                
+                
+                System.out.println("O canal favorito do hóspede # "+idThread+" é o "+chosped+" ");
+                System.out.println("O tempo de assistir do hóspede # "+idThread+" é o "+watch_h+" ");
+                System.out.println("O tempo de descanso do hóspede # "+idThread+" é o "+rest_h+" ");
+	}
+
+
+	public void Assistir() {
+		int inicio = (int)System.currentTimeMillis();
+		int f;
+		f = inicio+this.watch_h*1000;
+                System.out.println("O hospede # "+idThread+" está assistindo");
+		while (f>inicio) {
+			
+                        inicio = (int)System.currentTimeMillis();
+		}
+		System.out.println("O hospede # "+idThread+" terminou de assistir");
+	}
+
+	public void Descansar() {
+		int inicio = (int)System.currentTimeMillis();
+		int f;
+		f = inicio+this.rest_h*1000;
+                System.out.println("O hospede # "+idThread+" está descansando");
+		while (f>inicio) {
+			
+                        inicio = (int)System.currentTimeMillis();
+		}
+		System.out.println("O hospede # "+idThread+" está pronto para assistir novamente");
+	}
+
+	public void run() {
+		//audiencia = semaforo1
+		//mutex1 = semaforo2
+		//mutex2 = semaforo3
+
+		while(true) {
+			try {
+				this.mutex2.acquire();
+				if(this.livre == 0) {
+                                    this.livre++;
+                                    this.mutex3.acquire();
+                                    this.mutex2.release();
+                                    this.tv = chosped;
+                                    System.out.println("TV sintonizada no canal "+this.tv+"");
+                                    this.mutex1.acquire();
+                                    this.audiencia++;
+                                    this.mutex1.release();
+                                    Assistir();
+                                    this.mutex1.acquire();
+                                    this.audiencia--;
+                                    this.mutex1.release();
+                                    if(this.audiencia == 0) {
+                                        this.tv=0;
+                                        this.livre--;
+                                        this.mutex3.release();
+                                    }
+                                    Descansar();
+                                    
+                                }
+				else {
+                                    this.mutex2.release();
+                                    if(this.tv == chosped) {
+                                        this.mutex1.acquire();
+                                        this.audiencia++;
+                                        this.mutex1.release();
+                                        Assistir();
+                                        this.mutex1.acquire();
+                                        this.audiencia--;
+                                        this.mutex1.release();
+                                        if(this.audiencia == 0) {
+                                            this.tv=0;
+                                            this.livre--;
+                                            this.mutex3.release();
+                                        }
+                                        Descansar();
+                                        
+                                    }
+                                    else {
+                                        System.out.println("O hospede # "+idThread+" está esperando sua vez");
+                                        this.mutex3.acquire();
+                                        this.mutex3.release();
+                                    }
+                                }
+			}
+
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+}
