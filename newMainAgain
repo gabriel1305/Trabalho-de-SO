@@ -5,9 +5,9 @@ public class Main {
 	public static void main(String[] args) {
 	
 			Scanner sc = new Scanner(System.in);
-                        int livre = 0;
-                        int tv = 0;//variável que receberá o canal do hospede;
-                        int audiencia = 0;
+                        //int livre = 0;
+                        //int tv = 0;//variável que receberá o canal do hospede;
+                        //int audiencia = 0;
 			int cont;//contador;
 			int n;//Número de hospedes;
 			int c;//Número de canais
@@ -15,16 +15,17 @@ public class Main {
 			int restmax; //intervalo superior para tempo de descanso;
 			int watchmin;//intervalo inferior para tempo assistir;
 			int watchmax;//intervalo superior para tempo de assistir;
-			
+			//int contador = 0; //conta os bloqueados;
 			//int rest_h;
 			//int watch_h;
 			//int audiencia = 0;//Semaforo1
 			//int mutex1 = 1;//semaforo2
 			//int mutex2 = 2;//semaforo3
 			
-			Semaphore mutex1 = new Semaphore(1);//semaforo de audiencia
-			Semaphore mutex2 = new Semaphore(1);//semaforo para livre
-			Semaphore mutex3 = new Semaphore(1);//semaforo para canal
+			//Semaphore mutex1 = new Semaphore(1);//semaforo de audiencia
+			//Semaphore mutex2 = new Semaphore(1);//semaforo para livre
+			//Semaphore mutex3 = new Semaphore(contador);//semaforo para canal
+                        //Semaphore mutex4 = new Semaphore(1);
 			
 			System.out.println("Digite a quantidade de hospedes:");
                         System.out.println("(Valor mínimo = 1)");
@@ -87,7 +88,7 @@ public class Main {
                         
 			
 			for( cont=1;cont<=n;cont++) {
-				Thread thread = new Hospede(cont,c,livre,tv,audiencia,restmin,restmax,watchmin,watchmax,mutex1,mutex2,mutex3);
+				Thread thread = new Hospede(cont,c,restmin,restmax,watchmin,watchmax);
 				thread.start();
 			}
 
