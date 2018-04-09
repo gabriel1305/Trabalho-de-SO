@@ -17,9 +17,9 @@ public class Hospede extends Thread{
 	int watch_h;//tempo de assistir;
 	int watchmin;
 	int watchmax;
-	Semaphore mutex1;
-	Semaphore mutex2;
-	Semaphore mutex3;
+	static Semaphore mutex1;
+	static Semaphore mutex2;
+	static Semaphore mutex3;
 
 	public Hospede(int idThread, int c ,int livre, int tv, int audiencia, int restmin, int restmax, int watchmin, int watchmax, Semaphore mutex1,Semaphore mutex2,Semaphore mutex3){
 		this.idThread = idThread;
@@ -98,8 +98,9 @@ public class Hospede extends Thread{
                                     if(this.audiencia == 0) {
                                         this.tv=0;
                                         this.livre--;
-                                        this.mutex3.release();
                                         System.out.println("TV está livre");
+                                        this.mutex3.release();
+                                        
                                     }
                                     Descansar();
                                     
@@ -117,8 +118,10 @@ public class Hospede extends Thread{
                                         if(this.audiencia == 0) {
                                             this.tv=0;
                                             this.livre--;
-                                            this.mutex3.release();
                                             System.out.println("TV está livre");
+                                            this.mutex3.release();
+                                            
+                                            
                                         }
                                         Descansar();
                                         
