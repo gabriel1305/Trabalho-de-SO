@@ -27,22 +27,63 @@ public class Main {
 			Semaphore mutex3 = new Semaphore(1);//semaforo para canal
 			
 			System.out.println("Digite a quantidade de hospedes:");
+                        System.out.println("(Valor mínimo = 1)");
 			n = sc.nextInt();//lendo o numero de hospedes
+                        while(n<1){
+                            System.out.println("Entrada inválida");
+                            System.out.println("Digite a quantidade de hospedes:");
+                            System.out.println("(Valor mínimo = 1)");
+                            n = sc.nextInt();//lendo o numero de hospedes
+                        }
 			
 			System.out.println("Digite a quantidade de canais da Tv");
+                        System.out.println("(Valor mínimo = 1)");
 			c = sc.nextInt();//lendo o numero de canais
+                        while(c<1){
+                            System.out.println("Entrada inválida");
+                            System.out.println("Digite a quantidade de canais da Tv");
+                            System.out.println("(Valor mínimo = 1)");
+                            c = sc.nextInt();//lendo o numero de canais
+                        }
 			
 			System.out.println("Digite o tempo minimo de descanso");
+                        System.out.println("(Valor mínimo = 1)");
 			restmin = sc.nextInt();//minimo do intervalo de descanso
+                        while(restmin<1){
+                            System.out.println("Entrada inválida");
+                            System.out.println("Digite o tempo minimo de descanso");
+                            restmin = sc.nextInt();//minimo do intervalo de descanso
+                        }
 			
 			System.out.println("Digite o tempo maximo de descanso");
+                        System.out.println("(Igual ou acima do mínimo)");
 			restmax = sc.nextInt();//maximo do intervalo de descanso
+                        while(restmax<restmin){
+                            System.out.println("Entrada inválida");
+                            System.out.println("Digite o tempo maximo de descanso");
+                            System.out.println("(Igual ou acima do mínimo)");
+                            restmax = sc.nextInt();//maximo do intervalo de descanso
+                        }
 			
 			System.out.println("Digite o tempo minimo de ver tv");
+                        System.out.println("(Valor mínimo = 1)");
 			watchmin = sc.nextInt();//minimo do intervalo de ver tv
+                        while(watchmin<1){
+                            System.out.println("Entrada inválida");
+                            System.out.println("Digite o tempo minimo de ver tv");
+                            System.out.println("(Valor mínimo = 1)");
+                            watchmin = sc.nextInt();//minimo do intervalo de ver tv
+                        }
 			
 			System.out.println("Digite o tempo maximo de ver tv");
+                        System.out.println("(Igual ou acima do mínimo)");
 			watchmax = sc.nextInt();//maximo do intervalo de ver tv
+                        while(watchmax<watchmin){
+                            System.out.println("Entrada inválida");
+                            System.out.println("Digite o tempo maximo de ver tv");
+                            System.out.println("(Igual ou acima do mínimo)");
+                            watchmax = sc.nextInt();//maximo do intervalo de ver tv
+                        }
                         
 			
 			for( cont=1;cont<=n;cont++) {
