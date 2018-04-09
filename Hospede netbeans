@@ -7,7 +7,7 @@ public class Hospede extends Thread{
 
 	public static int livre = 0;
 	public static int tv = 0;
-    public static int audiencia = 0;
+        public static int audiencia = 0;
 	int idThread;
 	int c;
 	int chosped;//variavel que receve o canal do hospede;
