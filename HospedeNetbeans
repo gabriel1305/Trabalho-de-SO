@@ -1,0 +1,153 @@
+package Semaforo;
+import java.util.Random;
+import java.util.concurrent.Semaphore;
+//System.out.println("Thread #" +this.idThread + ","+ this.rest_h+","+this.watch_h+","+this.chosped);
+
+public class Hospede extends Thread{
+	Random random = new Random();
+
+	public static int livre = 0;
+	public static int tv = 0;
+    public static int audiencia = 0;
+	int idThread;
+	int c;
+	int chosped;//variavel que receve o canal do hospede;
+	int rest_h;//tempo de descanso;
+	int restmin;
+	int restmax;
+	int watch_h;//tempo de assistir;
+	int watchmin;
+	int watchmax;
+        static int contador = 0;
+	public static Semaphore mutex1 = new Semaphore(1);//semaforo de audiencia
+	public static Semaphore mutex2 = new Semaphore(1);//semaforo para livre
+	public static Semaphore mutex3 = new Semaphore(contador);//semaforo para canal
+        public static Semaphore mutex4 = new Semaphore(1);
+
+	public Hospede(int idThread,int c, int restmin, int restmax, int watchmin, int watchmax){
+		this.idThread = idThread;
+		this.c = c;
+		/*this.livre = livre;
+                this.audiencia = audiencia;
+                //this.chospede = hospede;
+		//this.rest_h = rest_h;*/
+		this.restmin = restmin;
+		this.restmax = restmax;
+		//this.watch_h = watch_h;
+		this.watchmin = watchmin;
+		this.watchmax = watchmax;
+		/*this.mutex1 = mutex1;
+		this.mutex2 = mutex2;
+		this.mutex3 = mutex3; */
+
+		chosped = random.nextInt(c)+1;//Gerando o canal para o hospede
+		rest_h = (int) (Math.random()*(this.restmax-this.restmin+1))+this.restmin;//gerando o tempo de descanso
+		watch_h = (int) (Math.random()*(this.watchmax-this.watchmin+1))+this.watchmin;//gerando o tempo de assistir
+                
+                
+                
+                
+                System.out.println("O canal favorito do hóspede # "+this.idThread+" é o "+this.chosped+" ");
+                System.out.println("O tempo de assistir do hóspede # "+this.idThread+" é o "+this.watch_h+" ");
+                System.out.println("O tempo de descanso do hóspede # "+this.idThread+" é o "+this.rest_h+" ");
+	}
+
+
+	public void Assistir() {
+		int inicio = (int)System.currentTimeMillis();
+		int f;
+		f = inicio+this.watch_h*1000;
+                System.out.println("O hospede # "+this.idThread+" está assistindo");
+		while (f>inicio) {
+			
+                        inicio = (int)System.currentTimeMillis();
+		}
+		System.out.println("O hospede # "+this.idThread+" terminou de assistir");
+	}
+
+	public void Descansar() {
+		int inicio = (int)System.currentTimeMillis();
+		int f;
+		f = inicio+this.rest_h*1000;
+                System.out.println("O hospede # "+this.idThread+" está descansando");
+		while (f>inicio) {
+			
+                        inicio = (int)System.currentTimeMillis();
+		}
+		System.out.println("O hospede # "+this.idThread+" está pronto para assistir novamente");
+	}
+
+	public void run() {
+		//audiencia = semaforo1
+		//mutex1 = semaforo2
+		//mutex2 = semaforo3
+
+		while(true) {
+			try {
+				mutex2.acquire();
+				if(livre == 0) {
+                                    livre++;
+                                    //this.mutex3.acquire();
+                                    mutex2.release();
+                                    tv = this.chosped;
+                                    System.out.println("TV sintonizada no canal "+tv+"");
+                                    mutex1.acquire();
+                                    audiencia++;
+                                    mutex1.release();
+                                    Assistir();
+                                    mutex1.acquire();
+                                    audiencia--;
+                                    mutex1.release();
+                                    if(audiencia == 0) {
+                                        tv=0;
+                                        livre--;
+                                        System.out.println("TV está livre");
+                                        mutex3.release(contador);
+                                        
+                                    }
+                                    Descansar();
+                                    
+                                }
+				else {
+                                    mutex2.release();
+                                    if(tv == this.chosped) {
+                                        mutex1.acquire();
+                                        audiencia++;
+                                        mutex1.release();
+                                        Assistir();
+                                        mutex1.acquire();
+                                        audiencia--;
+                                        mutex1.release();
+                                        if(audiencia == 0) {
+                                            tv=0;
+                                            livre--;
+                                            System.out.println("TV está livre");
+                                            mutex3.release(contador);
+                                            
+                                            
+                                        }
+                                        Descansar();
+                                        
+                                    }
+                                    else {
+                                        System.out.println("O hospede # "+this.idThread+" está esperando sua vez");
+                                        mutex4.acquire();
+                                        contador++;
+                                        mutex4.release();
+                                        mutex3.acquire();
+                                        mutex4.acquire();
+                                        contador--;
+                                        mutex4.release();
+                                    }
+                                }
+			}
+
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+}
