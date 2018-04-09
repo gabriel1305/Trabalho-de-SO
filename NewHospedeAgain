@@ -38,8 +38,8 @@ public class Hospede extends Thread{
 		this.mutex3 = mutex3; 
 
 		chosped = random.nextInt(c)+1;//Gerando o canal para o hospede
-		rest_h = (int) (Math.random()*this.restmax)+this.restmin;//gerando o tempo de descanso
-		watch_h = (int) (Math.random()*this.watchmax)+this.watchmin;//gerando o tempo de assistir
+		rest_h = (int) (Math.random()*(this.restmax-this.restmin+1))+this.restmin;//gerando o tempo de descanso
+		watch_h = (int) (Math.random()*(this.watchmax-this.watchmin+1))+this.watchmin;//gerando o tempo de assistir
                 
                 
                 
@@ -99,6 +99,7 @@ public class Hospede extends Thread{
                                         this.tv=0;
                                         this.livre--;
                                         this.mutex3.release();
+                                        System.out.println("TV está livre");
                                     }
                                     Descansar();
                                     
@@ -117,6 +118,7 @@ public class Hospede extends Thread{
                                             this.tv=0;
                                             this.livre--;
                                             this.mutex3.release();
+                                            System.out.println("TV está livre");
                                         }
                                         Descansar();
                                         
