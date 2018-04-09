@@ -274,20 +274,20 @@ public class Menu extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         int n = Integer.parseInt(txtQhosped.getText());//Converti o arquivo texto em inteiro
-        int chosped =0;//VAriavel que armazena o canal do hospede
-        int rest_h;//Tempo de descanso
+        //int chosped =0;//VAriavel que armazena o canal do hospede
+        //int rest_h;//Tempo de descanso
         int restmin = Integer.parseInt(txtRestMin.getText());//Converti o arquivo texto em inteiro
         int restmax = Integer.parseInt(txtRestMax.getText());//Converti o arquivo texto em inteiro
-        int watch_h;//Tempo de assistir
+        //int watch_h;//Tempo de assistir
         int watchmin = Integer.parseInt(txtWhatchMin.getText());//Converti o arquivo texto em inteiro
         int watchmax = Integer.parseInt(txtWhatchMax.getText());//Converti o arquivo texto em inteiro
-        int livre = 0;
-        int tv = 0;
-        int audiencia = 0;
+        //int livre = 0;
+        //int tv = 0;
+        //int audiencia = 0;
         int cont;//contador;
-        int contador = 0;
-       // JTextField Assistindo =null;
-       int c = Integer.parseInt(txtQcanais.getText());
+        //int contador = 0;
+        //JTextField Assistindo =null;
+        int c = Integer.parseInt(txtQcanais.getText());
        
         // Semaphore mutex1 = new Semaphore(1);//semaforo de audiencia
 	 //Semaphore mutex2 = new Semaphore(1);//semaforo para livre
@@ -296,7 +296,7 @@ public class Menu extends javax.swing.JFrame {
         
         for( cont=1;cont<=n;cont++) {
 
-		Hospede thread = new Hospede(cont,c,chosped,restmin,restmax,watchmin,watchmax);
+		Hospede thread = new Hospede(cont,c,restmin,restmax,watchmin,watchmax);
                 thread.start();
                         
 			}
