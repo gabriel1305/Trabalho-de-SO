@@ -5,9 +5,9 @@ import java.util.concurrent.Semaphore;
 public class Hospede extends Thread{
 	Random random = new Random();
 
-	public static int livre;
-	public static int tv;
-        public static int audiencia;
+	public static int livre = 0;
+	public static int tv = 0;
+        public static int audiencia = 0;
 	int idThread;
 	int c;
 	int chosped;//variavel que receve o canal do hospede;
@@ -17,25 +17,27 @@ public class Hospede extends Thread{
 	int watch_h;//tempo de assistir;
 	int watchmin;
 	int watchmax;
-	static Semaphore mutex1;
-	static Semaphore mutex2;
-	static Semaphore mutex3;
+        static int contador = 0;
+	public static Semaphore mutex1 = new Semaphore(1);//semaforo de audiencia
+	public static Semaphore mutex2 = new Semaphore(1);//semaforo para livre
+	public static Semaphore mutex3 = new Semaphore(contador);//semaforo para canal
+        public static Semaphore mutex4 = new Semaphore(1);
 
-	public Hospede(int idThread, int c ,int livre, int tv, int audiencia, int restmin, int restmax, int watchmin, int watchmax, Semaphore mutex1,Semaphore mutex2,Semaphore mutex3){
+	public Hospede(int idThread, int c , int restmin, int restmax, int watchmin, int watchmax){
 		this.idThread = idThread;
 		this.c = c;
-		this.livre = livre;
+		/*this.livre = livre;
                 this.audiencia = audiencia;
                 //this.chospede = hospede;
-		//this.rest_h = rest_h;
+		//this.rest_h = rest_h;*/
 		this.restmin = restmin;
 		this.restmax = restmax;
 		//this.watch_h = watch_h;
 		this.watchmin = watchmin;
 		this.watchmax = watchmax;
-		this.mutex1 = mutex1;
+		/*this.mutex1 = mutex1;
 		this.mutex2 = mutex2;
-		this.mutex3 = mutex3; 
+		this.mutex3 = mutex3; */
 
 		chosped = random.nextInt(c)+1;//Gerando o canal para o hospede
 		rest_h = (int) (Math.random()*(this.restmax-this.restmin+1))+this.restmin;//gerando o tempo de descanso
@@ -81,45 +83,45 @@ public class Hospede extends Thread{
 
 		while(true) {
 			try {
-				this.mutex2.acquire();
-				if(this.livre == 0) {
-                                    this.livre++;
-                                    this.mutex3.acquire();
-                                    this.mutex2.release();
-                                    this.tv = chosped;
-                                    System.out.println("TV sintonizada no canal "+this.tv+"");
-                                    this.mutex1.acquire();
-                                    this.audiencia++;
-                                    this.mutex1.release();
+				mutex2.acquire();
+				if(livre == 0) {
+                                    livre++;
+                                    //this.mutex3.acquire();
+                                    mutex2.release();
+                                    tv = chosped;
+                                    System.out.println("TV sintonizada no canal "+tv+"");
+                                    mutex1.acquire();
+                                    audiencia++;
+                                    mutex1.release();
                                     Assistir();
-                                    this.mutex1.acquire();
-                                    this.audiencia--;
-                                    this.mutex1.release();
-                                    if(this.audiencia == 0) {
-                                        this.tv=0;
-                                        this.livre--;
+                                    mutex1.acquire();
+                                    audiencia--;
+                                    mutex1.release();
+                                    if(audiencia == 0) {
+                                        tv=0;
+                                        livre--;
                                         System.out.println("TV está livre");
-                                        this.mutex3.release();
+                                        mutex3.release(contador);
                                         
                                     }
                                     Descansar();
                                     
                                 }
 				else {
-                                    this.mutex2.release();
-                                    if(this.tv == chosped) {
-                                        this.mutex1.acquire();
-                                        this.audiencia++;
-                                        this.mutex1.release();
+                                    mutex2.release();
+                                    if(tv == chosped) {
+                                        mutex1.acquire();
+                                        audiencia++;
+                                        mutex1.release();
                                         Assistir();
-                                        this.mutex1.acquire();
-                                        this.audiencia--;
-                                        this.mutex1.release();
-                                        if(this.audiencia == 0) {
-                                            this.tv=0;
-                                            this.livre--;
+                                        mutex1.acquire();
+                                        audiencia--;
+                                        mutex1.release();
+                                        if(audiencia == 0) {
+                                            tv=0;
+                                            livre--;
                                             System.out.println("TV está livre");
-                                            this.mutex3.release();
+                                            mutex3.release(contador);
                                             
                                             
                                         }
@@ -128,8 +130,13 @@ public class Hospede extends Thread{
                                     }
                                     else {
                                         System.out.println("O hospede # "+idThread+" está esperando sua vez");
-                                        this.mutex3.acquire();
-                                        this.mutex3.release();
+                                        mutex4.acquire();
+                                        contador++;
+                                        mutex4.release();
+                                        mutex3.acquire();
+                                        mutex4.acquire();
+                                        contador--;
+                                        mutex4.release();
                                     }
                                 }
 			}
